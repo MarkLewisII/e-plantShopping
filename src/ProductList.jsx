@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './ProductList.css'
 import CartItem from './CartItem';
-import addItem from './CartSlice';
+import { addItem} from './CartSlice';
 import { useDispatch } from 'react-redux';
 function ProductList({ onHomeClick }) {
     const [showCart, setShowCart] = useState(false);
@@ -260,14 +260,24 @@ function ProductList({ onHomeClick }) {
 
     const handleAddToCart = (e) => {
 
-        console.log('adding item:', e);
+console.log('addItem identifier:', addItem);
+console.log('typeof addItem:', typeof addItem);
+console.log('addItem(e) =>', addItem ? addItem(e) : addItem);
+
+console.log('addItem value:', addItem);
+console.log('addItem.length (expected 1 for action creator):', addItem.length);
+console.log('addItem(e) =>', addItem ? addItem(e) : addItem);
+
         dispatch(addItem(e));
 
-        setAddedToCart((prevState) => ({
+        console.log('dispatch addItem successful');
+        setAddedToCart((prevState) => {
+            const next = {
             ...prevState,
-            [e.name]: true,
-        }));
-        console.log(prevState);
+            [e.name]: true,};
+            return next;
+        });
+        // console.log(prevState);
     };
     return (
         <div>
