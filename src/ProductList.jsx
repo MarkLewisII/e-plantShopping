@@ -259,18 +259,8 @@ function ProductList({ onHomeClick }) {
     };
 
     const handleAddToCart = (e) => {
-
-        console.log('addItem identifier:', addItem);
-        console.log('typeof addItem:', typeof addItem);
-        console.log('addItem(e) =>', addItem ? addItem(e) : addItem);
-
-        console.log('addItem value:', addItem);
-        console.log('addItem.length (expected 1 for action creator):', addItem.length);
-        console.log('addItem(e) =>', addItem ? addItem(e) : addItem);
-
         dispatch(addItem(e));
 
-        console.log('dispatch addItem successful');
         setAddedToCart((prevState) => {
             const next = {
                 ...prevState,
@@ -278,7 +268,6 @@ function ProductList({ onHomeClick }) {
             };
             return next;
         });
-        // console.log(prevState);
     };
     return (
         <div>
