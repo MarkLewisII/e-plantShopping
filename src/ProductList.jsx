@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './ProductList.css'
 import CartItem from './CartItem';
-import { addItem } from './CartSlice';
+import { addItem, selectCartItems } from './CartSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCartTotalQuantity } from './CartSlice';
 function ProductList({ onHomeClick }) {
@@ -10,9 +10,25 @@ function ProductList({ onHomeClick }) {
     const [addedToCart, setAddedToCart] = useState({});
     const dispatch = useDispatch();
     const totalQuantity = useSelector(selectCartTotalQuantity);
-    
+    const cartItems = useSelector(selectCartItems);
+    // const isItemInCart = (item) => {
+    //     const key = item.id ?? item.name;
+    //     return cartItems.some(ci => (ci.id ?? ci.name) === key);
+    // }
+
     // dispatch(addItem(product));
-    
+
+useEffect(() => {
+    setAddedToCart(prev => {
+        const next = { ...prev };
+        const keysInCart = new Set(cartItems.map(ci => ci.id ?? ci.name));
+        Object.keys(next).forEach(k => {
+            if(!keysInCart.has(k)) delete next[k];
+        });
+        return next;
+    });
+}, [cartItems]);
+
     const plantsArray = [
         {
             category: "Air Purifying Plants",
@@ -314,6 +330,7 @@ function ProductList({ onHomeClick }) {
                                         {/* Display other plant details like description and cost */}
                                         <div className="product-description">{plant.description}</div> {/* Display plant description */}
                                         <div className="product-cost">{plant.cost}</div> {/* Display plant cost */}
+                                        
                                         <button
                                             className={addedToCart[plant.name] ? 'product-button added-to-cart' : 'product-button'}
                                             onClick={() => handleAddToCart(plant)} // Handle adding plant to cart
