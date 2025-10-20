@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './ProductList.css'
 import CartItem from './CartItem';
-import { addItem} from './CartSlice';
+import { addItem } from './CartSlice';
 import { useDispatch } from 'react-redux';
 function ProductList({ onHomeClick }) {
     const [showCart, setShowCart] = useState(false);
@@ -260,21 +260,22 @@ function ProductList({ onHomeClick }) {
 
     const handleAddToCart = (e) => {
 
-console.log('addItem identifier:', addItem);
-console.log('typeof addItem:', typeof addItem);
-console.log('addItem(e) =>', addItem ? addItem(e) : addItem);
+        console.log('addItem identifier:', addItem);
+        console.log('typeof addItem:', typeof addItem);
+        console.log('addItem(e) =>', addItem ? addItem(e) : addItem);
 
-console.log('addItem value:', addItem);
-console.log('addItem.length (expected 1 for action creator):', addItem.length);
-console.log('addItem(e) =>', addItem ? addItem(e) : addItem);
+        console.log('addItem value:', addItem);
+        console.log('addItem.length (expected 1 for action creator):', addItem.length);
+        console.log('addItem(e) =>', addItem ? addItem(e) : addItem);
 
         dispatch(addItem(e));
 
         console.log('dispatch addItem successful');
         setAddedToCart((prevState) => {
             const next = {
-            ...prevState,
-            [e.name]: true,};
+                ...prevState,
+                [e.name]: true,
+            };
             return next;
         });
         // console.log(prevState);
@@ -301,29 +302,36 @@ console.log('addItem(e) =>', addItem ? addItem(e) : addItem);
             </div>
             {!showCart ? (
                 <div className="product-grid">
-                    <ul>
-
-                        {plantsArray.map(function(item, index){
-                            return (
-                            <li key={index}>
-                                <h3>{item.category}</h3>
-                                <ul>
-                                    {item.plants.map(function(plantitem, plantindex) {
-                                        return (
-                                        <li key={plantindex}>
-                                            <img src={plantitem.image} alt={plantitem.name} />
-                                            <h2>{plantitem.name}</h2>
-                                            <p>{plantitem.description}</p>
-                                            <p>{plantitem.cost}</p>
-                                            <button onClick={() => handleAddToCart(plantitem)}>Add to Cart</button>
-                                        </li>
-                                        )
-                                    })}
-                                </ul>
-                            </li> )
-                        })}
-
-                    </ul>
+                    {plantsArray.map((category, index) => ( // Loop through each category in plantsArray
+                        <div key={index}> {/* Unique key for each category div */}
+                            <h1>
+                                <div>{category.category}</div> {/* Display the category name */}
+                            </h1>
+                            <div className="product-list"> {/* Container for the list of plant cards */}
+                                {category.plants.map((plant, plantIndex) => ( // Loop through each plant in the current category
+                                    <div className="product-card" key={plantIndex}> {/* Unique key for each plant card */}
+                                        <img
+                                            className="product-image"
+                                            src={plant.image} // Display the plant image
+                                            alt={plant.name} // Alt text for accessibility
+                                        />
+                                        <div className="product-title">{plant.name}</div> {/* Display plant name */}
+                                        {/* Display other plant details like description and cost */}
+                                        <div className="product-description">{plant.description}</div> {/* Display plant description */}
+                                        <div className="product-cost">${plant.cost}</div> {/* Display plant cost */}
+                                        <button
+                                            className={addedToCart[plant.name] ? 'product-button added-to-cart' : 'product-button'}
+                                            onClick={() => handleAddToCart(plant)} // Handle adding plant to cart
+                                            disabled={!!addedToCart[plant.name]}
+                                            aria-pressed={!!addedToCart[plant.name]}
+                                        >
+                                            {addedToCart[plant.name] ? "Added to Cart" : "Add to Cart"}
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
                 </div>
             ) : (
                 <CartItem onContinueShopping={handleContinueShopping} />
